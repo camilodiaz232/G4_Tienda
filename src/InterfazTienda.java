@@ -80,26 +80,9 @@ public class InterfazTienda {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-              // Obtencion de las listas de datos para cada columna
-                dataNombre = actualizarInventario("Producto");
-                dataCantidad = actualizarInventario("Cantidad");
-                dataValor = actualizarInventario("Valor");
-                //System.out.println("lista nombre"+dataNombre[1]);
-
-
-              // Creación de tabla
-                String [] nombreColumnas = {"Nombre","unidad","valor"};
-                tableModel = new DefaultTableModel(1,0);
-                //tableModel.addRow(nombreColumnas);
-                tableModel.addColumn("nombre",dataNombre);
-                tableModel.addColumn("Cantidad",dataCantidad);
-                tableModel.addColumn("Cantidad",dataValor);
-                tableInv.setModel(tableModel);
-
-                // Cargue de producto al combo box
-                comboBoxModel = new DefaultComboBoxModel(dataNombre);
-                cBoxProductos.setModel(comboBoxModel);
-
+                obtenerListaDatos();
+                crearTabla();
+                cargarProducto();
 
             }
         });
@@ -117,6 +100,34 @@ public class InterfazTienda {
 
             }
         });
+        obtenerListaDatos();
+        crearTabla();
+        cargarProducto();
+    }
+
+    private void cargarProducto() {
+        // Cargue de producto al combo box
+        comboBoxModel = new DefaultComboBoxModel(dataNombre);
+        cBoxProductos.setModel(comboBoxModel);
+    }
+
+    private void crearTabla() {
+        // Creación de tabla
+        String [] nombreColumnas = {"Nombre","unidad","valor"};
+        tableModel = new DefaultTableModel(1,0);
+        //tableModel.addRow(nombreColumnas);
+        tableModel.addColumn("nombre",dataNombre);
+        tableModel.addColumn("Cantidad",dataCantidad);
+        tableModel.addColumn("Cantidad",dataValor);
+        tableInv.setModel(tableModel);
+    }
+
+    private void obtenerListaDatos() {
+        // Obtencion de las listas de datos para cada columna
+        dataNombre = actualizarInventario("Producto");
+        dataCantidad = actualizarInventario("Cantidad");
+        dataValor = actualizarInventario("Valor");
+        //System.out.println("lista nombre"+dataNombre[1]);
     }
 
     public static void main(String[] args) {
