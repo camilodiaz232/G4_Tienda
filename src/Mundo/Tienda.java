@@ -13,11 +13,13 @@ public class Tienda {
 
 
     //Metodo para actualizar el inventario
-    public static ArrayList<String> actualizarInventario (String nombreColumna)  {
+    public static Object [] actualizarInventario (String nombreColumna)  {
         Statement st; // variable para declarar la conexión
         ResultSet rs; // Varialble para almacenar el resultado de la conexión
 
         ArrayList <String> listaDatos = new ArrayList<>();  //ArrayList que almacena los datos de la conexión
+
+        listaDatos.add(nombreColumna.toUpperCase());
 
         try {
             st= ConexionMySQL.conectar().createStatement();
@@ -33,7 +35,8 @@ public class Tienda {
             throw new RuntimeException(e);
 
         }
-        return listaDatos;
+        Object [] dataObjeto = listaDatos.toArray();
+        return dataObjeto;
     }
 
     public static void ingresarMovimiento (String nombre, Integer movimiento, Integer cantidad, Float valor)  {
@@ -53,6 +56,30 @@ public class Tienda {
                 JOptionPane.showMessageDialog(null, "Registro guardaro");
             } else {
                 JOptionPane.showMessageDialog(null, "Error al guardar registro");
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error en SQL:" + e.toString());
+        }
+
+    }
+
+    public static void eliminarProducto (String producto) {
+
+
+        PreparedStatement ps;  // Variable para declarar el conexión
+        try {
+            // Declaracion SQL y sus variables para eliminar producto
+            ps=ConexionMySQL.conectar().prepareStatement("delete from `tienda.movInventario` where producto = ?");
+            ps.setString(1,producto);
+
+            int res = ps.executeUpdate();
+
+            // Presentación de los resultados de la conexión
+            if (res >0){
+                JOptionPane.showMessageDialog(null, "Registro eliminado");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al eliminar registro");
             }
 
         } catch (SQLException e) {

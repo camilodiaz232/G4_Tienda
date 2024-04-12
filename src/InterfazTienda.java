@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import static Mundo.Tienda.*;
 
@@ -21,7 +20,14 @@ public class InterfazTienda {
     private JRadioButton btComprar;
     private JRadioButton btVender;
     private JTable tableInv;
+    private JComboBox cBoxProductos;
+    private JButton btEliminar;
     private DefaultTableModel tableModel;
+    private  DefaultComboBoxModel comboBoxModel;
+
+    Object [] dataNombre;
+    Object [] dataCantidad;
+    Object[] dataValor;
 
 
     // Getter de los Botones tipo Radio
@@ -56,35 +62,69 @@ public class InterfazTienda {
 
                   // Registro de las variable en metodo de la clase Tienda
                     ingresarMovimiento(gNombre, gMovimiento, gCantidad, gValor);
+
+
+                  // Borrar los valores de los campos de texto
+                    tfNombre.setText("");
+                    tfCantidad.setText("");
+                    tfValor.setText("");
+
+
             }
         });
 
+
+        
         //Declaracion de la Accion en el boton ACTUALIZAR INVENTARIO
         btActualizar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
               // Obtencion de las listas de datos para cada columna
-                ArrayList<String> dataNombre = actualizarInventario("Producto");
-                ArrayList<String> dataCantidad = actualizarInventario("Cantidad");
-                ArrayList<String> dataValor = actualizarInventario("Valor");
-                System.out.println("lista nombre"+dataNombre);
+                dataNombre = actualizarInventario("Producto");
+                dataCantidad = actualizarInventario("Cantidad");
+                dataValor = actualizarInventario("Valor");
+                //System.out.println("lista nombre"+dataNombre[1]);
+
 
               // Creación de tabla
                 String [] nombreColumnas = {"Nombre","unidad","valor"};
-                // tableModel = new DefaultTableModel(dataNombre,nombreColumnas);
-                tableInv = new JTable(tableModel);
+                tableModel = new DefaultTableModel(1,0);
+                //tableModel.addRow(nombreColumnas);
+                tableModel.addColumn("nombre",dataNombre);
+                tableModel.addColumn("Cantidad",dataCantidad);
+                tableModel.addColumn("Cantidad",dataValor);
+                tableInv.setModel(tableModel);
+
+                // Cargue de producto al combo box
+                comboBoxModel = new DefaultComboBoxModel(dataNombre);
+                cBoxProductos.setModel(comboBoxModel);
+
 
             }
         });
 
+        btEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                // Seleccion de producto elegido en el combo box
+                String productoElimiar= (String) cBoxProductos.getSelectedItem();
+
+                // Eliminacion de producto
+                eliminarProducto(productoElimiar);
+
+
+            }
+        });
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("InterfazTienda");
+        JFrame frame = new JFrame("Tienda");
         frame.setContentPane(new InterfazTienda().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setSize(350,500);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
